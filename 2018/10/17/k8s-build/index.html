@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="第一部分：机器前期配置三台centos7机器：master    192.168.10.140 node1    192.168.10.139 node2    192.168.10.141 设置主机名与IP地址的映射 （三台机器）$ vim /etc/hosts (如果没有vim的可以使用vi 或者yum install vim,下面是在master节点上的设置) 127.0.0.1    ma">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-17T09:43:22.582Z">
+<meta property="og:updated_time" content="2018-10-17T09:46:46.720Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kubeadm搭建k8s_v1.11.1">
 <meta name="twitter:description" content="第一部分：机器前期配置三台centos7机器：master    192.168.10.140 node1    192.168.10.139 node2    192.168.10.141 设置主机名与IP地址的映射 （三台机器）$ vim /etc/hosts (如果没有vim的可以使用vi 或者yum install vim,下面是在master节点上的设置) 127.0.0.1    ma">
@@ -350,8 +350,8 @@ node2    192.168.10.141
 192.168.10.141    node2
 重启网络服务
 $ systemctl restart network
-&lt;!-- more --&gt;
-</code></pre><h3 id="关闭firewalld，selinux，-iptables，swap"><a href="#关闭firewalld，selinux，-iptables，swap" class="headerlink" title="关闭firewalld，selinux， iptables，swap"></a>关闭firewalld，selinux， iptables，swap</h3><pre><code>1.  $ systemctl stop firewalld
+</code></pre><a id="more"></a>
+<h3 id="关闭firewalld，selinux，-iptables，swap"><a href="#关闭firewalld，selinux，-iptables，swap" class="headerlink" title="关闭firewalld，selinux， iptables，swap"></a>关闭firewalld，selinux， iptables，swap</h3><pre><code>1.  $ systemctl stop firewalld
     $ systemctl disabled firewalld
 2.  关闭selinux
     永久关闭：
