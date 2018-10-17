@@ -341,17 +341,17 @@
       
         
           
-            <h2 id="第一部分：机器前期配置"><a href="#第一部分：机器前期配置" class="headerlink" title="第一部分：机器前期配置"></a>第一部分：机器前期配置</h2><h3 id="1-三台centos7机器："><a href="#1-三台centos7机器：" class="headerlink" title="1.三台centos7机器："></a>1.三台centos7机器：</h3><pre><code>master    192.168.10.140
+            <h2 id="第一部分：机器前期配置"><a href="#第一部分：机器前期配置" class="headerlink" title="第一部分：机器前期配置"></a>第一部分：机器前期配置</h2><h3 id="三台centos7机器："><a href="#三台centos7机器：" class="headerlink" title="三台centos7机器："></a>三台centos7机器：</h3><pre><code>master    192.168.10.140
 node1    192.168.10.139
 node2    192.168.10.141
-</code></pre><h3 id="2-设置主机名与IP地址的映射-（三台机器）"><a href="#2-设置主机名与IP地址的映射-（三台机器）" class="headerlink" title="2.设置主机名与IP地址的映射 （三台机器）"></a>2.设置主机名与IP地址的映射 （三台机器）</h3><pre><code>$ vim /etc/hosts
+</code></pre><h3 id="设置主机名与IP地址的映射-（三台机器）"><a href="#设置主机名与IP地址的映射-（三台机器）" class="headerlink" title="设置主机名与IP地址的映射 （三台机器）"></a>设置主机名与IP地址的映射 （三台机器）</h3><pre><code>$ vim /etc/hosts
 (如果没有vim的可以使用vi 或者yum install vim,下面是在master节点上的设置)
 127.0.0.1    master
 192.168.10.139    node1
 192.168.10.141    node2
 重启网络服务
 $ systemctl restart network
-</code></pre><h3 id="3-关闭firewalld，selinux，-iptables，swap"><a href="#3-关闭firewalld，selinux，-iptables，swap" class="headerlink" title="3.关闭firewalld，selinux， iptables，swap"></a>3.关闭firewalld，selinux， iptables，swap</h3><pre><code>1.  $ systemctl stop firewalld
+</code></pre><h3 id="关闭firewalld，selinux，-iptables，swap"><a href="#关闭firewalld，selinux，-iptables，swap" class="headerlink" title="关闭firewalld，selinux， iptables，swap"></a>关闭firewalld，selinux， iptables，swap</h3><pre><code>1.  $ systemctl stop firewalld
     $ systemctl disabled firewalld
 2.  关闭selinux
     永久关闭：
@@ -363,7 +363,7 @@ $ systemctl restart network
 3.  $ service   iptables stop     
     $ chkconfig   iptables off（永久关闭）
 4.  $ swapoff -a &amp;&amp; sysctl -w vm.swappiness=0
-</code></pre><h2 id="第二部分：master节点初始化"><a href="#第二部分：master节点初始化" class="headerlink" title="第二部分：master节点初始化"></a>第二部分：master节点初始化</h2><h3 id="1-编辑docker和kubernetes的yum仓库"><a href="#1-编辑docker和kubernetes的yum仓库" class="headerlink" title="1.编辑docker和kubernetes的yum仓库"></a>1.编辑docker和kubernetes的yum仓库</h3><pre><code>$ cd /etc/yum.repos.d/
+</code></pre><h2 id="第二部分：master节点初始化"><a href="#第二部分：master节点初始化" class="headerlink" title="第二部分：master节点初始化"></a>第二部分：master节点初始化</h2><h3 id="编辑docker和kubernetes的yum仓库"><a href="#编辑docker和kubernetes的yum仓库" class="headerlink" title="编辑docker和kubernetes的yum仓库"></a>编辑docker和kubernetes的yum仓库</h3><pre><code>$ cd /etc/yum.repos.d/
 $ wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 $ vim kubernetes.repo
 
@@ -377,23 +377,22 @@ enabled=1
 把配置好的仓库scp给node1和node2
 $ scp kubernetes.repo docker-ce.repo node1:/etc/yum.repos.d/
 $ scp kubernetes.repo docker-ce.repo node2:/etc/yum.repos.d/
-</code></pre><h3 id="2-导入gpg-三个节点"><a href="#2-导入gpg-三个节点" class="headerlink" title="2.导入gpg(三个节点)"></a>2.导入gpg(三个节点)</h3><pre><code>$ cd
+</code></pre><h3 id="导入gpg-三个节点"><a href="#导入gpg-三个节点" class="headerlink" title="导入gpg(三个节点)"></a>导入gpg(三个节点)</h3><pre><code>$ cd
 $ wget https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
 $ wget https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 $ rpm --import yum-key.gpg
 $ rpm --import rpm-package-key.gpg
-</code></pre><h3 id="3-安装docker，kubelet，kubeadm，kubectl-三个节点"><a href="#3-安装docker，kubelet，kubeadm，kubectl-三个节点" class="headerlink" title="3.安装docker，kubelet，kubeadm，kubectl(三个节点)"></a>3.安装docker，kubelet，kubeadm，kubectl(三个节点)</h3><pre><code>$ yum install docker-ce kubelet-1.11.1 kubeadm-1.11.1 kubelet-1.11.1
+</code></pre><h3 id="安装docker，kubelet，kubeadm，kubectl-三个节点"><a href="#安装docker，kubelet，kubeadm，kubectl-三个节点" class="headerlink" title="安装docker，kubelet，kubeadm，kubectl(三个节点)"></a>安装docker，kubelet，kubeadm，kubectl(三个节点)</h3><pre><code>$ yum install docker-ce kubelet-1.11.1 kubeadm-1.11.1 kubelet-1.11.1
 启动并且设置docker kubelet开机自启动：
 $ systemctl start docker
 $ systemctl enable docker
 $ systemctl start kubelet
 $ systemctl enable kubelet
-</code></pre><h3 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h3><pre><code>$ vim  /etc/rc.d/rc.local添加下面两条命令
-echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables
+</code></pre><h3 id="vim-etc-rc-d-rc-local添加下面两条命令"><a href="#vim-etc-rc-d-rc-local添加下面两条命令" class="headerlink" title="$ vim  /etc/rc.d/rc.local添加下面两条命令"></a>$ vim  /etc/rc.d/rc.local添加下面两条命令</h3><pre><code>echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables
 echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-ip6tables
 centos7需要增加执行权限：
 $ chmod +x　/etc/rc.d/rc.loca
-</code></pre><h3 id="5-提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）："><a href="#5-提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）：" class="headerlink" title="5.提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）："></a>5.提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）：</h3><pre><code>docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver-amd64:v1.11.0
+</code></pre><h3 id="提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）："><a href="#提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）：" class="headerlink" title="提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）："></a>提前拉取镜像并且tag（三个节点都需要镜像，但是master节点和node节点需要的不完全一样我为了方便就都拉了）：</h3><pre><code>docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver-amd64:v1.11.0
 docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager-amd64:v1.11.0
 docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler-amd64:v1.11.0
 docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy-amd64:v1.11.0
@@ -427,15 +426,14 @@ docker pull registry.cn-hangzhou.aliyuncs.com/k8sth/coredns:1.1.3
 docker tag registry.cn-hangzhou.aliyuncs.com/k8sth/coredns:1.1.3 k8s.gcr.io/coredns:1.1.3
 docker tag k8s.gcr.io/pause-amd64:3.1 k8s.gcr.io/pause:3.1
 注：有几个镜像的版本我不确定，之前init的时候初始化报错，于是我就把错误提示中需要的镜像又pull下来或者重新tag
-</code></pre><h3 id="6-master节点初始化"><a href="#6-master节点初始化" class="headerlink" title="6.master节点初始化"></a>6.master节点初始化</h3><pre><code>$ kubeadm init --kubernetes-version=1.11.1 --pod-network-cidr=10.244.0.0/16 --service-cidr=10.96.0.0/12
+</code></pre><h3 id="master节点初始化"><a href="#master节点初始化" class="headerlink" title="master节点初始化"></a>master节点初始化</h3><pre><code>$ kubeadm init --kubernetes-version=1.11.1 --pod-network-cidr=10.244.0.0/16 --service-cidr=10.96.0.0/12
 记录下节点初始化成功后最后两行：
 kubeadm join 192.168.10.140:6443 --token uu6gou.n0ffipdhtrkiodef --discovery-token-ca-cert-hash sha256:70d944573b5d5f2672b765fb0c282b4153bb6971c2e3aa9a31e80ebb630c8491
-</code></pre><h3 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h3><pre><code>$ mkdir -p $HOME/.kube
-$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+</code></pre><h3 id="mkdir-p-HOME-kube"><a href="#mkdir-p-HOME-kube" class="headerlink" title="$ mkdir -p $HOME/.kube"></a>$ mkdir -p $HOME/.kube</h3><pre><code>$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
-</code></pre><h3 id="8-部署flannel"><a href="#8-部署flannel" class="headerlink" title="8.部署flannel"></a>8.部署flannel</h3><pre><code>$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+</code></pre><h3 id="部署flannel"><a href="#部署flannel" class="headerlink" title="部署flannel"></a>部署flannel</h3><pre><code>$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 成功后使用 kubectl get nodes 应该可以看到master节点Ready
-</code></pre><h3 id="9-node节点加入集群。在node节点上执行你记录下来的命令"><a href="#9-node节点加入集群。在node节点上执行你记录下来的命令" class="headerlink" title="9.node节点加入集群。在node节点上执行你记录下来的命令"></a>9.node节点加入集群。在node节点上执行你记录下来的命令</h3><pre><code>$ kubeadm join 192.168.10.140:6443 --token uu6gou.n0ffipdhtrkiodef --discovery-token-ca-cert-hash sha256:70d944573b5d5f2672b765fb0c282b4153bb6971c2e3aa9a31e80ebb630c8491
+</code></pre><h3 id="node节点加入集群。在node节点上执行你记录下来的命令"><a href="#node节点加入集群。在node节点上执行你记录下来的命令" class="headerlink" title="node节点加入集群。在node节点上执行你记录下来的命令"></a>node节点加入集群。在node节点上执行你记录下来的命令</h3><pre><code>$ kubeadm join 192.168.10.140:6443 --token uu6gou.n0ffipdhtrkiodef --discovery-token-ca-cert-hash sha256:70d944573b5d5f2672b765fb0c282b4153bb6971c2e3aa9a31e80ebb630c8491
 </code></pre>
           
         
